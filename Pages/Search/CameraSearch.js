@@ -46,51 +46,40 @@ function CameraSearch() {
           sendImageToServer(photos[0], data.uri);
           setPhotos([...photos, data.uri]); // 이전 배열에 새로운 데이터 추가
           setIsFirstPictureTaken(false);
+          console.log("2번사진")
         } else {
           // 첫 번째 이미지를 찍었을 때
           alert('사진 배열에 저장 완료♪');
           setPhotos([data.uri]);
           console.log("배열 확인용",photos.length)
           setIsFirstPictureTaken(true);
+          console.log("1번사진")
+        }
+        if (photos.length === 2) { // photos 배열의 길이가 2이면
+          alert('사진 서버로 전송 완료♪')
+          sendImageToServer(photos[0], photos[1]); // 두 개의 사진 데이터를 전달
+          console.log("들어왔나?", photos)
         }
       } catch (e) {
         console.log("사진 찍기 실패,,,", e);
       }
     }
   };
-  
 
-  // const nextPicture = async () => {
+  //사진 저장하기 버튼
+  // const saveImage = async () => {
   //   if (image) {
   //     try {
   //       const asset = await MediaLibrary.createAssetAsync(image.uri); // 여기에서 변경됨
-  //       setPhotos([...photos, asset]);
-  //       alert('사진 배열에 저장 완료♪')
-  //       console.log("배열",photos)
+  //       await sendImageToServer(image); // Flask 서버로 이미지 전송
+  //       alert('사진 저장 완료♪')
   //       setImage(null);
-  //       // setIsFirstPictureTaken(false);
-        
+  //       setIsFirstPictureTaken(false);
   //     } catch (e) {
   //       console.log("사진 저장하기 실패,,,", e)
   //     }
-      
   //   }
   // }
-
-  //사진 저장하기 버튼
-  const saveImage = async () => {
-    if (image) {
-      try {
-        const asset = await MediaLibrary.createAssetAsync(image.uri); // 여기에서 변경됨
-        await sendImageToServer(image); // Flask 서버로 이미지 전송
-        alert('사진 저장 완료♪')
-        setImage(null);
-        setIsFirstPictureTaken(false);
-      } catch (e) {
-        console.log("사진 저장하기 실패,,,", e)
-      }
-    }
-  }
 
   // 사진 서버에 보내기
   const sendImageToServer = async (imageUri1, imageUri2) => {
@@ -115,7 +104,7 @@ function CameraSearch() {
       console.log('사진 보내짐?', res.data)
     } catch (e) {
       console.log('사진 axios 서버로 보내기 실패,,,', e)
-      console.log("나오냐", image)
+      console.log("나오냐", imageUri1, imageUri2)
       // if (e.response) {
       //   // 요청은 성공했지만 응답에서 오류 코드가 반환됨
       //   console.log('response.data:', e.response.data);
@@ -170,20 +159,36 @@ function CameraSearch() {
         :
         <CameraButton title={'Take a picture'} icon="camera" onPress={takePicture}/>
         } */}
-       {image ?
-  <View style={{flexDirection:"row", justifyContent: 'space-between', paddingHorizontal: 50}}>
-    {isFirstPictureTaken ? 
-      <CameraButton title={"Next Picture"} icon="camera" onPress={nextPicture}
-      /> :
-      <>
-        <CameraButton title={"Re-take"} icon="retweet" onPress={() => setImage(null)}/>
-        <CameraButton title={"save"} icon="check" onPress={saveImage}/>
-      </>
-    }
-  </View>
-  :
-  <CameraButton title={'Take a picture'} icon="camera" onPress={takePicture}/>
-}
+       {/* {image ?
+          <View style={{flexDirection:"row", justifyContent: 'space-between', paddingHorizontal: 50}}>
+            {isFirstPictureTaken ? 
+              <CameraButton title={"Next Picture"} icon="camera" onPress={nextPicture}
+              /> :
+              <>
+                <CameraButton title={"Re-take"} icon="retweet" onPress={() => setImage(null)}/>
+                <CameraButton title={"save"} icon="check" onPress={saveImage}/>
+              </>
+            }
+          </View>
+        :
+          <CameraButton title={'Take a picture'} icon="camera" onPress={takePicture}/>
+        } */}
+        {/* {image ?
+          <View style={{flexDirection:"row", justifyContent: 'space-between', paddingHorizontal: 50}}>
+            {photos.length === 2 ? 
+              <CameraButton title={"Save"} icon="check" onPress={saveImage}/> :
+              isFirstPictureTaken ? 
+                <CameraButton title={"Next Picture"} icon="camera" onPress={nextPicture}
+                /> :
+                <>
+                  <CameraButton title={"Re-take"} icon="retweet" onPress={() => setImage(null)}/>
+                  <CameraButton title={"Next Picture"} icon="camera" onPress={nextPicture}/>
+                </>
+            }
+          </View>
+          :
+          <CameraButton title={'Take a picture'} icon="camera" onPress={takePicture}/>
+        } */}
       </View>
     </View>
   )
